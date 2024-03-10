@@ -52,12 +52,16 @@ public abstract class DeviceConnection {
         }
         try {
             this.outputStream.write(this.data);
-            this.outputStream.flush();
-            int waitingTime = addWaitingTime + this.data.length / 16;
-            this.data = new byte[0];
-            if(waitingTime > 0) {
+            this.outputStream.flush(); 
+            int waitingTime = Math.min(addWaitingTime, 50); // Limite máximo de 50 ms 
+            if (waitingTime > 0) {
                 Thread.sleep(waitingTime);
             }
+            // int waitingTime = addWaitingTime + this.data.length / 16;
+            // this.data = new byte[0];
+            // if(waitingTime > 0) {
+            //     Thread.sleep(waitingTime);
+            // }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             throw new EscPosConnectionException(e.getMessage());
